@@ -1,0 +1,61 @@
+---
+title: "stdBeta"
+author: "Doug Hemken"
+date: "July 2017"
+output: html_document
+---
+
+## Do we really need another function that standardizes coefficients?
+There are several R functions out there that will return \'standardized
+coefficients\' of one sort or another.  My chief complaint with them
+all is that they are difficult to interpret when the model includes
+interaction terms (or polynomial terms, for that matter).
+
+Other package::functions that return standardized coefficients:
+
+- QuantPsyc::lm.beta - standardizes the model matrix terms, including factors.  Returns a vector of coefficients. Breaks on interaction terms.
+- lm.beta::lm.beta - returns an object of class "lm.beta", an augmented "lm" object.  Standardizes everything in the model matrix.  Same approach as QuantPsyc::lm.beta, but with a different return object.
+- lsr::standardCoefs - returns a matrix of unstandardized and standardized coefficients.  Standardizes the model matrix terms, including factors.  Again, same approach as QuantPsyc::lm.beta.
+- arm::standardize - standardizes model frame, scales by 2 sds rather than 1, y optional, various factor options, options to exclude some vars, returns an "lm" object
+
+## What are \'Standardized Coefficients\'?
+Standardized coefficients are usually described as the coefficients estimated
+for a model when all of the variables have been standardized.  There are
+some variations on this basic idea, but they all begin by first - in
+principle - standardizing the variables.
+
+I stipulate \"in principle\" because you do not actually have to transform
+your data before estimating a model *in some cases*.  Where your model
+consists of only first-order, continuous variables, all you need is the
+standard deviations of each of your variables to calculate standardized
+coefficients from the unstandardized coefficients (coefficients in your
+data\'s original units).
+
+The formula for transforming coefficients, usually taught in introductory
+regression courses, is
+$\beta = \sigma_x/\sigma_y \times b$, where $b$ is an unstandardized
+coefficient, $\sigma_x$ is the standard deviation of the independent
+variable in question, and $\sigma_y$ is the standard deviation of the
+dependent variable.
+
+In quite a bit of statistical software - SAS, Stata, SPSS, and the first
+three R functions listed above - this formula is blindly applied to
+higher order terms as well, that is, to interaction and polynomial terms.
+While these coefficients are useful for many purposes, they are ***not***
+consistent with the basic idea of standardized coefficients, because
+they are not the coefficients one would estimate were the data transformed
+first.  Just what they represent is convoluted.
+
+## A Demonstration
+Let\'s start with R\'s standard `mtcars` data, and estimate a model
+where the formula fails.
+```{r demo1, message=FALSE}
+fit <- lm(mpg ~ disp*wt, mtcars)
+library(lm.beta)
+lm.beta(fit)
+
+mpg <- scale(mtcars$mpg)
+disp <- scale(mtcars$disp)
+wt <- scale(mtcars$wt)
+coefficients(lm(mpg ~ disp*wt))
+```
