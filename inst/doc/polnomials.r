@@ -13,6 +13,8 @@ mtcars[, modelvars] <- sapply(mtcars[, modelvars], scale)
 summary(update(fit3, data=mtcars))
 
 rm(mtcars)
+stdBeta(fit3)
+
 head(poly(mtcars$wt, degree=2, raw=TRUE))
 
 fit4 <- lm(mpg ~ poly(wt, degree=2, raw=TRUE)*disp, mtcars)
