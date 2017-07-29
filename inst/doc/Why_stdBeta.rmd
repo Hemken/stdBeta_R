@@ -64,16 +64,42 @@ coefficients(lm(zmpg ~ zdisp*zwt))
 fit <- lm(mpg ~ disp*wt, mtcars)
 
 # And apply the available functions
-QuantPsyc::lm.beta(fit) # warning given
+QuantPsyc::lm.beta(fit) # warning given, wrong results
 lm.beta::lm.beta(fit)
 lsr::standardCoefs(fit) # agrees with lm.beta::lm.beta, but no intercept
 arm::standardize(fit, standardize.y=TRUE)
 ```
 
-The `QuantPsyc` function is implemented in a way that breaks on
-higher order terms.  The `lm.beta` and `lsr` functions apply
+The `QuantPsyc` function uses the classic formula, but
+is implemented in a way that produces a warning with 
+higher order terms.  The `lm.beta` and `lsr` functions also apply
 the classic shortcut formula, which is at odds with the concept.
 The `arm` function insists on scaling by 2 standard deviations,
 an alternative concept.
 
 So none of these really returns the coefficients we want.
+
+```{r demo2}
+stdBeta::stdBeta(fit)
+```
+This gives us the coefficients we would gotten \'by hand\'.
+
+## Polynomial Regression
+R\'s formula specification does not allow polynomial terms to
+be formed as tensor products like other statistical software,
+which leaves three commonly used methods for specifying
+polynomial regressions.  The first is to \"inhibit\" interpretation
+of the exponentiation operator.
+
+```{r poly1}
+coefficients(lm(zmpg ~ zwt + I(zwt^2))) # by "hand"
+fitsq <- lm(mpg ~ wt + I(wt^2), mtcars)
+stdBeta::stdBeta(fitsq)
+```
+
+The second method would be to use the `poly` function.
+```{r poly2}
+coefficients(lm(zmpg ~ zwt + I(zwt^2))) # by "hand"
+fitpoly <- lm(mpg ~ poly(wt,2,raw=TRUE), data=mtcars)
+stdBeta::stdBeta(fitpoly)
+```

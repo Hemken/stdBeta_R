@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -105,7 +105,7 @@ zwt &lt;-<span class="st"> </span><span class="kw">scale</span>(mtcars$wt)
 fit &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg ~<span class="st"> </span>disp*wt, mtcars)
 
 <span class="co"># And apply the available functions</span>
-QuantPsyc::<span class="kw">lm.beta</span>(fit) <span class="co"># warning given</span></code></pre></div>
+QuantPsyc::<span class="kw">lm.beta</span>(fit) <span class="co"># warning given, wrong results</span></code></pre></div>
 <pre><code>## Warning in b * sx: longer object length is not a multiple of shorter object
 ## length</code></pre>
 <pre><code>##       disp         wt    disp:wt 
@@ -131,8 +131,48 @@ QuantPsyc::<span class="kw">lm.beta</span>(fit) <span class="co"># warning given
 ## Coefficients:
 ## (Intercept)       z.disp         z.wt  z.disp:z.wt  
 ##     -0.1013      -0.3845      -0.6161       0.4711</code></pre>
-<p>The <code>QuantPsyc</code> function is implemented in a way that breaks on higher order terms. The <code>lm.beta</code> and <code>lsr</code> functions apply the classic shortcut formula, which is at odds with the concept. The <code>arm</code> function insists on scaling by 2 standard deviations, an alternative concept.</p>
+<p>The <code>QuantPsyc</code> function uses the classic formula, but is implemented in a way that produces a warning with higher order terms. The <code>lm.beta</code> and <code>lsr</code> functions also apply the classic shortcut formula, which is at odds with the concept. The <code>arm</code> function insists on scaling by 2 standard deviations, an alternative concept.</p>
 <p>So none of these really returns the coefficients we want.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">stdBeta::<span class="kw">stdBeta</span>(fit)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ disp * wt, data = stddata)
+## 
+## Coefficients:
+## (Intercept)         disp           wt      disp:wt  
+##     -0.2026      -0.3845      -0.6161       0.2355</code></pre>
+<p>This gives us the coefficients we would gotten 'by hand'.</p>
+</div>
+<div id="polynomial-regression" class="section level2">
+<h2>Polynomial Regression</h2>
+<p>R's formula specification does not allow polynomial terms to be formed as tensor products like other statistical software, which leaves three commonly used methods for specifying polynomial regressions. The first is to &quot;inhibit&quot; interpretation of the exponentiation operator.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coefficients</span>(<span class="kw">lm</span>(zmpg ~<span class="st"> </span>zwt +<span class="st"> </span><span class="kw">I</span>(zwt^<span class="dv">2</span>))) <span class="co"># by &quot;hand&quot;</span></code></pre></div>
+<pre><code>## (Intercept)         zwt    I(zwt^2) 
+##  -0.1802135  -0.9489152   0.1860268</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitsq &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg ~<span class="st"> </span>wt +<span class="st"> </span><span class="kw">I</span>(wt^<span class="dv">2</span>), mtcars)
+stdBeta::<span class="kw">stdBeta</span>(fitsq)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ wt + I(wt^2), data = stddata)
+## 
+## Coefficients:
+## (Intercept)           wt      I(wt^2)  
+##     -0.1802      -0.9489       0.1860</code></pre>
+<p>The second method would be to use the <code>poly</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coefficients</span>(<span class="kw">lm</span>(zmpg ~<span class="st"> </span>zwt +<span class="st"> </span><span class="kw">I</span>(zwt^<span class="dv">2</span>))) <span class="co"># by &quot;hand&quot;</span></code></pre></div>
+<pre><code>## (Intercept)         zwt    I(zwt^2) 
+##  -0.1802135  -0.9489152   0.1860268</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitpoly &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg ~<span class="st"> </span><span class="kw">poly</span>(mtcars$wt,<span class="dv">2</span>,<span class="dt">raw=</span><span class="ot">TRUE</span>), mtcars)
+stdBeta::<span class="kw">stdBeta</span>(fitpoly)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ poly(mtcars$wt, 2, raw = TRUE), data = stddata)
+## 
+## Coefficients:
+##                     (Intercept)  poly(mtcars$wt, 2, raw = TRUE)1  
+##                          4.9511                          -2.2201  
+## poly(mtcars$wt, 2, raw = TRUE)2  
+##                          0.1943</code></pre>
 </div>
 
 
@@ -142,7 +182,7 @@ QuantPsyc::<span class="kw">lm.beta</span>(fit) <span class="co"># warning given
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
