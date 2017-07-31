@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -162,17 +162,17 @@ stdBeta::<span class="kw">stdBeta</span>(fitsq)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coefficients</span>(<span class="kw">lm</span>(zmpg ~<span class="st"> </span>zwt +<span class="st"> </span><span class="kw">I</span>(zwt^<span class="dv">2</span>))) <span class="co"># by &quot;hand&quot;</span></code></pre></div>
 <pre><code>## (Intercept)         zwt    I(zwt^2) 
 ##  -0.1802135  -0.9489152   0.1860268</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitpoly &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg ~<span class="st"> </span><span class="kw">poly</span>(mtcars$wt,<span class="dv">2</span>,<span class="dt">raw=</span><span class="ot">TRUE</span>), mtcars)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitpoly &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg ~<span class="st"> </span><span class="kw">poly</span>(wt,<span class="dv">2</span>,<span class="dt">raw=</span><span class="ot">TRUE</span>), <span class="dt">data=</span>mtcars)
 stdBeta::<span class="kw">stdBeta</span>(fitpoly)</code></pre></div>
 <pre><code>## 
 ## Call:
-## lm(formula = mpg ~ poly(mtcars$wt, 2, raw = TRUE), data = stddata)
+## lm(formula = mpg ~ poly(wt, 2, raw = TRUE), data = stddata)
 ## 
 ## Coefficients:
-##                     (Intercept)  poly(mtcars$wt, 2, raw = TRUE)1  
-##                          4.9511                          -2.2201  
-## poly(mtcars$wt, 2, raw = TRUE)2  
-##                          0.1943</code></pre>
+##              (Intercept)  poly(wt, 2, raw = TRUE)1  
+##                  -0.1802                   -0.9489  
+## poly(wt, 2, raw = TRUE)2  
+##                   0.1860</code></pre>
 </div>
 
 
@@ -182,7 +182,7 @@ stdBeta::<span class="kw">stdBeta</span>(fitpoly)</code></pre></div>
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

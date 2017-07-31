@@ -1,11 +1,19 @@
 stdBeta <- function(lmfit) {
   stopifnot(class(lmfit)=="lm")
-  stddata <- stats::model.frame(lmfit)
+  stddata <- stats::model.frame(lmfit, data=lmfit$call$data)
   # print(str(stddata))
-  # print(sapply(stddata, data.class))
-  stopifnot(all(sapply(stddata, data.class) %in% c("numeric", "factor", "AsIs")))
+  framenames <- names(stddata)
+  # print(framenames)
   modelvars <- all.vars(formula(lmfit))
   # print(modelvars)
+  if (length(framenames)==length(modelvars)) {
+    if (length(modelvars[framenames != modelvars])>0) { # indicates a matrix as var
+      # print(lmfit$call$data)
+      stddata <- get_all_vars(formula(lmfit), data=eval(lmfit$call$data))
+    }
+  }
+  # print(sapply(stddata, data.class))
+  stopifnot(all(sapply(stddata, data.class) %in% c("numeric", "factor", "AsIs")))
   numvars <- sapply(stddata[, modelvars], is.numeric)
   stddata[, modelvars][, numvars] <- sapply(stddata[, modelvars][, numvars], scale)
   # head(df)
