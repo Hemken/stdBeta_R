@@ -1,7 +1,7 @@
 ---
 title: "stdBeta"
 author: "Doug Hemken"
-date: "July 2017"
+date: "August 2017"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Why stdBeta?}
@@ -11,9 +11,14 @@ vignette: >
 
 ## Do we really need another function that standardizes coefficients?
 There are several R functions out there that will return \'standardized
-coefficients\' of one sort or another.  My chief complaint with them
-all is that they are difficult to interpret when the model includes
-interaction terms (or polynomial terms, for that matter).
+coefficients\' of one sort or another.  Three of these work fine for
+models with no interaction or polynomial terms, but fail to produce
+the expected results where these higher order terms are present.
+Two of these produce valid models, in the sense that they produce
+the correct predicted values and residuals.  However, they are
+difficult to interpret when the model includes
+higher order terms, because similar-looking variables are not
+on the same scales.
 
 Other package::functions that return standardized coefficients:
 

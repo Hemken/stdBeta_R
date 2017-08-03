@@ -15,7 +15,8 @@ stdBeta <- function(lmfit) {
   # print(sapply(stddata, data.class))
   stopifnot(all(sapply(stddata, data.class) %in% c("numeric", "factor", "AsIs")))
   numvars <- sapply(stddata[, modelvars], is.numeric)
-  stddata[, modelvars][, numvars] <- sapply(stddata[, modelvars][, numvars], scale)
+  stddata <- stats::na.omit(stddata[, modelvars])
+  stddata[, numvars] <- sapply(stddata[, numvars], scale)
   # head(df)
   stats::update(lmfit, data=stddata)
 }

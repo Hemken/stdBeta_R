@@ -34,8 +34,9 @@ mtcars[, modelvars] <- sapply(mtcars[, modelvars], scale)
 summary(update(fit4, data=mtcars))
 rm(mtcars)
 
-stdBeta::stdBeta(fit4) # blocked
 QuantPsyc::lm.beta(fit4) # Wrong, with WARNING
 lm.beta::lm.beta(fit4) # wrong, no warning
 lsr::standardCoefs(fit4) # again wrong, no warning
 arm::standardize(fit4, standardize.y=TRUE) # wrong, but no error
+stdBeta::stdBeta(fit4) # good
+
