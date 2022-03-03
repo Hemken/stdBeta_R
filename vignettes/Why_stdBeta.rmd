@@ -1,7 +1,7 @@
 ---
 title: "stdBeta"
 author: "Doug Hemken"
-date: "August 2017"
+date: "`r format(Sys.Date(), '%b %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Why stdBeta?}
@@ -9,23 +9,47 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-## Do we really need another function that standardizes coefficients?
+## Comparing functions that standardize coefficients
 There are several R functions out there that will return \'standardized
-coefficients\' of one sort or another.  Three of these work fine for
-models with no interaction or polynomial terms, but fail to produce
-the expected results where these higher order terms are present.
+coefficients\' of one sort or another.  The capabilities and assumptions
+of these functions differ on
+
+- scaling variables versus scaling terms,
+- scaling by one standard deviation or two, and
+- scaling factor variables or not.
+
+They also differ in what kind of data they return:  just coefficients,
+full `lm` objects, or something else.
+
+Reviewed here are the following functions:
+
+- QuantPsyc::lm.beta
+- lm.beta::lm.beta
+- lsr::standardCoefs
+- arm::standardize
+- reghelper::beta
+- effectsize::standardize
+- stdBeta::stdBeta
+
+Three of these functions work fine for additive effects
+models - models with no interaction or polynomial terms.
+However, they fail to produce
+the expected results where higher order terms are present.
 Two of these produce valid models, in the sense that they produce
 the correct predicted values and residuals.  However, they are
 difficult to interpret when the model includes
 higher order terms, because similar-looking variables are not
 on the same scales.
 
-Other package::functions that return standardized coefficients:
+Package::functions that return standardized coefficients:
 
 - QuantPsyc::lm.beta - standardizes the model matrix terms, including factors.  Returns a vector of coefficients. Breaks on interaction terms.
 - lm.beta::lm.beta - returns an object of class "lm.beta", an augmented "lm" object.  Standardizes everything in the model matrix.  Same approach as QuantPsyc::lm.beta, but with a different return object.
 - lsr::standardCoefs - returns a matrix of unstandardized and standardized coefficients.  Standardizes the model matrix terms, including factors.  Again, same approach as QuantPsyc::lm.beta.
 - arm::standardize - standardizes model frame, scales by 2 sds rather than 1, y optional, various factor options, options to exclude some vars, returns an "lm" object
+- reghelper::beta
+- effectsize::standardize
+- stdBeta::stdBeta
 
 ## What are \'Standardized Coefficients\'?
 Standardized coefficients are usually described as the coefficients estimated
