@@ -2,7 +2,7 @@ Package: stdBeta
 Type: Package
 Title: Standardized Coefficients for Linear Models
 Description: Updates a model fit by substituting standarized variables.
-Version: 0.2.3
+Version: 1.0
 Authors@R: person("Doug", "Hemken", email="dehemken@wisc.edu", 
         role=c("aut", "cre"), comment="SSCC, Univ. of Wisconsin-Madison")
 Maintainer: Doug Hemken <dehemken@wisc.edu>
